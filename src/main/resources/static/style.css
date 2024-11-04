@@ -27,3 +27,9 @@ body{
 .add-user-btn{
     margin-top: 20px;
 }
+
+#logoutButton{
+    border: none;
+    background: no-repeat;
+    color: gray;
+}

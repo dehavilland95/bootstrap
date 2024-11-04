@@ -12,7 +12,7 @@
             <figure class="text-end mb-0">
                 <form th:method="POST" th:action="@{/logout}">
                     <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
-                    <button type="submit">Выйти</button>
+                    <button id='logoutButton' type="submit">Logout</button>
                 </form>
             </figure>
         </div>
