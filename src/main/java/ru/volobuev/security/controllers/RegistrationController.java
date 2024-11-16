@@ -25,7 +25,7 @@ public class RegistrationController {
     @GetMapping("/registration")
     public String registration(Model model) {
         List<Role> roles = roleService.getAll();
-        model.addAttribute("roles", roles);
+        model.addAttribute("allRoles", roles);
         model.addAttribute("user", new User());
         return "registration";
     }
