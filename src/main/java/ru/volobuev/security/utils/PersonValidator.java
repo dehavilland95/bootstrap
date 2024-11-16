@@ -6,6 +6,7 @@ import org.springframework.validation.Validator;
 import ru.volobuev.security.models.User;
 import ru.volobuev.security.service.UserService;
 
+
 @Component
 public class PersonValidator implements Validator {
 

@@ -1,6 +1,5 @@
 package ru.volobuev.security.config;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -11,37 +10,22 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import ru.volobuev.security.repository.RoleRepository;
+import ru.volobuev.security.repository.UserRepository;
 import ru.volobuev.security.security.CustomAuthenticationProvider;
-import ru.volobuev.security.utils.CustomLoginSuccessHandler;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import ru.volobuev.security.service.UserService;
+import ru.volobuev.security.service.UserServiceImpl;
+import ru.volobuev.security.utils.CustomLoginSuccessHandler;
+
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
 
-    private final UserDetailsService userDetailsService;
-    @Autowired
-    UserService userService;
-    private final PasswordEncoder passwordEncoder;
-    @Autowired
-    private CustomAuthenticationProvider authProvider;
-
-    public SecurityConfig(UserDetailsService userDetailsService, PasswordEncoder passwordEncoder) {
-        this.userDetailsService = userDetailsService;
-        this.passwordEncoder = passwordEncoder;
-    }
-
     @Bean
     public AuthenticationSuccessHandler myAuthenticationSuccessHandler(){
         return new CustomLoginSuccessHandler();
     }
-
-
-//    @Bean
-//    public BCryptPasswordEncoder bCryptPasswordEncoder() {
-//        return new BCryptPasswordEncoder();
-//    }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -50,7 +34,7 @@ public class SecurityConfig {
                    .requestMatchers("/registration").not().authenticated()
                    .requestMatchers("/admin").hasRole("ADMIN")
                    .requestMatchers("/user").hasAnyRole("USER", "ADMIN")
-           .requestMatchers("/", "/login", "/error", "/resources/**", "/logout", "/style.css").permitAll()
+           .requestMatchers("/", "/login", "/error").permitAll()
            .anyRequest().authenticated())
                .formLogin(formLogin -> formLogin.loginPage("/login")
                        .loginProcessingUrl("/login")
@@ -63,14 +47,27 @@ public class SecurityConfig {
     }
 
     @Bean
-    public AuthenticationManager authManager(HttpSecurity http) throws Exception {
+    public UserService userService(
+            UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder) {
+        return new UserServiceImpl(userRepository, roleRepository, passwordEncoder);
+    }
+
+    @Bean
+    public CustomAuthenticationProvider customAuthenticationProvider(
+            UserService userService, PasswordEncoder bCryptPasswordEncoder) {
+        return new CustomAuthenticationProvider(userService, bCryptPasswordEncoder);
+    }
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    public AuthenticationManager authManager(HttpSecurity http, CustomAuthenticationProvider authProvider) throws Exception {
         AuthenticationManagerBuilder authenticationManagerBuilder =
                 http.getSharedObject(AuthenticationManagerBuilder.class);
         authenticationManagerBuilder.authenticationProvider(authProvider);
         return authenticationManagerBuilder.build();
-    }
-
-    public void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.authenticationProvider(authProvider);
     }
 }

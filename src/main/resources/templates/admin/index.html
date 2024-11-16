@@ -67,7 +67,7 @@
                                                     <button type="button" class="btn btn-info" data-bs-toggle="modal"  th:data-bs-target="'#modal' + ${user.getId()}">Edit</button>
                                                     <div class="modal fade" th:id="'modal' + ${user.getId()}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                                         <div class="modal-dialog">
-                                                            <form th:method="PATCH" th:action="@{/admin?id={id}(id=${user.getId()})}">
+                                                            <form th:method="PATCH" th:action="@{/admin/update?id={id}(id=${user.getId()})}">
                                                                 <div class="modal-content">
                                                                     <div class="modal-header">
                                                                         <h1 class="modal-title fs-5" id="exampleModalLabel">Заголовок модального окна</h1>
@@ -135,7 +135,7 @@
                                                     <button type="button" class="btn btn-danger" data-bs-toggle="modal"  th:data-bs-target="'#modalDelete' + ${user.getId()}">Delete</button>
                                                     <div class="modal fade" th:id="'modalDelete' + ${user.getId()}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                                         <div class="modal-dialog">
-                                                            <form th:method="DELETE" th:action="@{/admin?id={id}(id=${user.getId()})}">
+                                                            <form th:method="DELETE" th:action="@{/admin/delete?id={id}(id=${user.getId()})}">
                                                                 <div class="modal-content">
                                                                     <div class="modal-header">
                                                                         <h1 class="modal-title fs-5" id="exampleModalLabel">Заголовок модального окна</h1>
@@ -206,7 +206,7 @@
                                     Add new user
                                 </div>
                                 <div class="card-body">
-                                    <form th:method="POST" th:action="@{/admin}" th:object="${user}">
+                                    <form th:method="POST" th:action="@{/admin/create}" th:object="${user}">
                                         <div class="container">
                                             <div class="row justify-content-center">
                                                 <div class="col-md-12 row justify-content-center">

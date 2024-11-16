@@ -7,11 +7,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import ru.volobuev.security.models.Role;
 import ru.volobuev.security.models.User;
 import ru.volobuev.security.service.UserService;
-
-import java.util.List;
 
 @Controller
 @RequestMapping("/user")

@@ -2,8 +2,6 @@ package ru.volobuev.security.models;
 
 import jakarta.persistence.*;
 import org.springframework.security.core.GrantedAuthority;
-
-import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
