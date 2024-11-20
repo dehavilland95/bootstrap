@@ -7,7 +7,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import ru.volobuev.security.models.User;
 import ru.volobuev.security.service.UserService;
 
 @Controller
@@ -20,10 +19,9 @@ public class UsersController {
     public String index(Model model) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
-        model.addAttribute("username", username);
         UserDetails user = userService.loadUserByUsername(username);
         if(user != null) {
-            model.addAttribute("myInfo", (User) user);
+            model.addAttribute("myInfo", user);
         }
         return "user/index";
     }

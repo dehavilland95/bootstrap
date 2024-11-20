@@ -30,7 +30,7 @@ public class AdminController {
         List<Role> roles = roleService.getAll();
         model.addAttribute("allRoles", roles);
         if(user != null) {
-            model.addAttribute("myInfo", (User) user);
+            model.addAttribute("myInfo", user);
         }
         model.addAttribute("users", users);
         model.addAttribute("user", new User());
