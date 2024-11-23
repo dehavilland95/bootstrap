@@ -10,6 +10,7 @@ import ru.volobuev.security.models.Role;
 import ru.volobuev.security.models.User;
 import ru.volobuev.security.repository.UserRepository;
 import ru.volobuev.security.repository.RoleRepository;
+
 import java.util.*;
 
 @Service
@@ -19,7 +20,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     private final PasswordEncoder bCryptPasswordEncoder;
 
     public UserServiceImpl(UserRepository userRepository, RoleRepository roleRepository,
-                    PasswordEncoder bCryptPasswordEncoder){
+                           PasswordEncoder bCryptPasswordEncoder) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
@@ -41,7 +42,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
         return userFromDb.orElse(new User());
     }
 
-    private Set<Role> createRolesSet(String[] roleNames){
+    private Set<Role> createRolesSet(String[] roleNames) {
         Set<Role> roles = new HashSet<>();
         for (String roleName : roleNames) {
             Role role = roleRepository.findByName(roleName);
@@ -54,8 +55,14 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 
     @Transactional
     public void update(User user, String[] roleNames) {
-        user.setRoles(createRolesSet(roleNames));
-        userRepository.save(user);
+        Optional<User> userFromDb = userRepository.findById(user.getId());
+        if (userFromDb.isPresent()) {
+            user.setRoles(createRolesSet(roleNames));
+            if (user.getPassword() != null && !user.getPassword().isEmpty()) {
+                user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+            }
+            userRepository.save(user);
+        }
     }
 
     @Transactional(readOnly = true)
